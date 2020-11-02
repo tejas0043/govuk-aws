@@ -65,6 +65,7 @@ git clone git@github.com:alphagov/govuk-accessibility-reports.git
 
 # Set correct permissions for accessibility reports build script
 cd govuk-accessibility-reports
+git checkout add-entitity-report
 chmod +x ./build_accessibility_reports.sh
 
 # Set-up dependencies and generate accessibility reports
