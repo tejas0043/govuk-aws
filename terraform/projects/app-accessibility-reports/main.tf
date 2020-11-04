@@ -66,9 +66,26 @@ data "aws_iam_policy_document" "accessibility-reports_read_ssm_policy_document" 
   }
 }
 
+data "aws_iam_policy_document" "accessibility-reports_access_sagemaker_policy_document" {
+  statement {
+    actions = [
+      "sagemaker:InvokeEndpoint",
+    ]
+
+    resources = [
+      "arn:aws:sagemaker:eu-west-1:${data.aws_caller_identity.current.account_id}:endpoint/govner-endpoint",
+    ]
+  }
+}
+
 resource "aws_iam_policy" "accessibility-reports_read_ssm_policy" {
   name   = "accessibility-reports_read_ssm_policy"
   policy = "${data.aws_iam_policy_document.accessibility-reports_read_ssm_policy_document.json}"
+}
+
+resource "aws_iam_policy" "accessibility-reports_access_sagemaker_policy" {
+  name   = "accessibility-reports_access_sagemaker_policy"
+  policy = "${data.aws_iam_policy_document.accessibility-reports_access_sagemaker_policy_document.json}"
 }
 
 data "template_file" "ec2_assume_policy_template" {
@@ -88,6 +105,11 @@ resource "aws_iam_role_policy_attachment" "accessibility-reports_read_ssm_role_a
 resource "aws_iam_role_policy_attachment" "read_write_data_infrastructure_bucket_role_attachment" {
   role       = "${aws_iam_role.govuk-accessibility-reports-data-reader_role.name}"
   policy_arn = "${data.terraform_remote_state.app_knowledge_graph.read_write_data_infrastructure_bucket_policy_arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "accessibility-reports_access_sagemaker_role_attachment" {
+  role       = "${aws_iam_role.govuk-accessibility-reports-data-reader_role.name}"
+  policy_arn = "${aws_iam_policy.accessibility-reports_access_sagemaker_policy.arn}"
 }
 
 data "aws_iam_policy_document" "accessibility-reports_read_s3_mirror_bucket_policy_document" {
