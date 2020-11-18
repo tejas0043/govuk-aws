@@ -212,7 +212,7 @@ resource "aws_launch_template" "knowledge-graph_launch_template" {
   name     = "knowledge-graph_launch-template"
   image_id = "${data.aws_ami.neo4j_community_ami.id}"
 
-  instance_type = "m4.large"
+  instance_type = "r4.2xlarge"
 
   vpc_security_group_ids = ["${data.terraform_remote_state.infra_security_groups.sg_knowledge-graph_id}"]
 
@@ -269,7 +269,7 @@ resource "aws_autoscaling_schedule" "knowledge-graph_schedule-spin-up" {
 resource "aws_autoscaling_schedule" "knowledge-graph_schedule-spin-down" {
   autoscaling_group_name = "${aws_autoscaling_group.knowledge-graph_asg.name}"
   scheduled_action_name  = "knowledge-graph_schedule-spin-down"
-  recurrence             = "29 18 * * MON-FRI"
+  recurrence             = "29 22 * * MON-FRI"
   min_size               = -1
   max_size               = -1
   desired_capacity       = 0
