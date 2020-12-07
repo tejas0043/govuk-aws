@@ -39,6 +39,33 @@ resource "aws_wafv2_web_acl" "wafv2" {
     }
   }
 
+  rule {
+    name     = "RateLimit"
+    priority = 2
+
+    action {
+      count {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 2000           # requests per IP in 5 minute window
+        aggregate_key_type = "FORWARDED_IP"
+
+        forwarded_ip_config {
+          fallback_behavior = "MATCH"
+          header_name       = "True-Client-IP" # Set in Fastly VCL
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "cache-waf-rate-limit"
+      sampled_requests_enabled   = true
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "cache-waf"
