@@ -490,12 +490,12 @@ variable "waf_logs_hec_token" {
 # --------------------------------------------------------------
 terraform {
   backend          "s3"             {}
-  required_version = "= 0.11.14"
+  required_version = "= 0.13.5"
 }
 
 provider "aws" {
   region  = "${var.aws_region}"
-  version = "2.46.0"
+  version = "3.20.0"
 }
 
 #
@@ -559,9 +559,9 @@ module "backend_public_lb" {
   default_tags                               = "${map("Project", var.stackname, "aws_migration", "backend", "aws_environment", var.aws_environment)}"
 }
 
-resource "aws_wafregional_web_acl_association" "backend_public_lb" {
+resource "aws_wafv2_web_acl_association" "backend_public_lb" {
   resource_arn = "${module.backend_public_lb.lb_id}"
-  web_acl_id   = "${aws_wafregional_web_acl.default.id}"
+  web_acl_arn  = "${aws_wafv2_web_acl.wafv2.arn}"
 }
 
 resource "aws_lb_listener_rule" "backend_alb_blocked_host_headers" {
@@ -743,9 +743,9 @@ module "cache_public_lb" {
   default_tags                               = "${map("Project", var.stackname, "aws_migration", "cache", "aws_environment", var.aws_environment)}"
 }
 
-resource "aws_wafregional_web_acl_association" "cache_public_web_acl" {
+resource "aws_wafv2_web_acl_association" "cache_public_web_acl" {
   resource_arn = "${module.cache_public_lb.lb_id}"
-  web_acl_id   = "${aws_wafregional_web_acl.default.id}"
+  web_acl_arn  = "${aws_wafv2_web_acl.wafv2.arn}"
 }
 
 resource "aws_shield_protection" "cache_public_web_acl" {
@@ -1601,9 +1601,9 @@ resource "aws_lb_listener" "licensify_frontend_public_http_80" {
   }
 }
 
-resource "aws_wafregional_web_acl_association" "licensify_frontend_public_lb" {
+resource "aws_wafv2_web_acl_association" "licensify_frontend_public_lb" {
   resource_arn = "${module.licensify_frontend_public_lb.lb_id}"
-  web_acl_id   = "${aws_wafregional_web_acl.default.id}"
+  web_acl_arn  = "${aws_wafv2_web_acl.wafv2.arn}"
 }
 
 resource "aws_route53_record" "licensify_frontend_public_service_names" {
@@ -1711,9 +1711,9 @@ resource "aws_lb_listener" "licensify_backend_http_80" {
   }
 }
 
-resource "aws_wafregional_web_acl_association" "licensify_backend_public_lb" {
+resource "aws_wafv2_web_acl_association" "licensify_backend_public_lb" {
   resource_arn = "${module.licensify_backend_public_lb.lb_id}"
-  web_acl_id   = "${aws_wafregional_web_acl.default.id}"
+  web_acl_arn  = "${aws_wafv2_web_acl.wafv2.arn}"
 }
 
 resource "aws_route53_record" "licensify_backend_public_service_names" {
@@ -2225,9 +2225,9 @@ module "whitehall_backend_public_lb" {
   }
 }
 
-resource "aws_wafregional_web_acl_association" "whitehall_backend_public_lb" {
+resource "aws_wafv2_web_acl_association" "whitehall_backend_public_lb" {
   resource_arn = "${module.whitehall_backend_public_lb.lb_id}"
-  web_acl_id   = "${aws_wafregional_web_acl.default.id}"
+  web_acl_arn  = "${aws_wafv2_web_acl.wafv2.arn}"
 }
 
 resource "aws_route53_record" "whitehall_backend_public_service_names" {
@@ -2303,9 +2303,9 @@ module "whitehall_frontend_public_lb" {
   }
 }
 
-resource "aws_wafregional_web_acl_association" "whitehall_frontend_public_lb" {
+resource "aws_wafv2_web_acl_association" "whitehall_frontend_public_lb" {
   resource_arn = "${module.whitehall_frontend_public_lb.lb_id}"
-  web_acl_id   = "${aws_wafregional_web_acl.default.id}"
+  web_acl_arn  = "${aws_wafv2_web_acl.wafv2.arn}"
 }
 
 resource "aws_route53_record" "whitehall_frontend_public_service_names" {

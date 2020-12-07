@@ -1,27 +1,54 @@
-resource "aws_wafregional_web_acl" "default" {
-  name        = "CachePublicWebACL"
-  metric_name = "CachePublicWebACL"
+resource "aws_wafv2_web_acl" "wafv2" {
+  name  = "CachePublicWebACLv2"
+  scope = "REGIONAL"
 
   default_action {
-    type = "ALLOW"
+    allow {}
   }
 
   rule {
+    name     = "XAlwaysBlock"
+    priority = 1
+
     action {
-      type = "BLOCK"
+      block {}
     }
 
-    priority = 2
-    rule_id  = "${aws_wafregional_rule.x_always_block.id}"
+    statement {
+      byte_match_statement {
+        field_to_match {
+          single_header {
+            name = "x-always-block"
+          }
+        }
+
+        positional_constraint = "EXACTLY"
+        search_string         = "true"
+
+        text_transformation {
+          priority = 2
+          type     = "NONE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "cache-waf-x-always-block"
+      sampled_requests_enabled   = true
+    }
   }
 
-  logging_configuration {
-    log_destination = "${aws_kinesis_firehose_delivery_stream.splunk.arn}"
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "cache-waf"
+    sampled_requests_enabled   = true
   }
+}
 
-  depends_on = [
-    "aws_wafregional_rule.x_always_block",
-  ]
+resource "aws_wafv2_web_acl_logging_configuration" "kinesis_firehose" {
+  log_destination_configs = ["${aws_kinesis_firehose_delivery_stream.splunk.arn}"]
+  resource_arn            = "${aws_wafv2_web_acl.wafv2.arn}"
 }
 
 resource "aws_s3_bucket" "aws_waf_logs" {
@@ -176,6 +203,6 @@ resource "aws_kinesis_firehose_delivery_stream" "splunk" {
 }
 
 output "default_waf_acl" {
-  value       = "${aws_wafregional_web_acl.default.id}"
-  description = "GOV.UK default regional WAF ACL"
+  value       = "${aws_wafv2_web_acl.wafv2.id}"
+  description = "GOV.UK default regional WAFv2 ACL"
 }
