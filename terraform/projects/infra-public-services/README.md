@@ -8,15 +8,15 @@ This project adds global resources for app components:
 
 | Name | Version |
 |------|---------|
-| terraform | = 0.11.14 |
-| aws | 2.46.0 |
+| terraform | = 0.13.5 |
+| aws | 3.20.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | archive | n/a |
-| aws | 2.46.0 |
+| aws | 3.20.0 |
 | terraform | n/a |
 
 ## Inputs
@@ -130,5 +130,5 @@ This project adds global resources for app components:
 
 | Name | Description |
 |------|-------------|
-| default\_waf\_acl | GOV.UK default regional WAF ACL |
+| default\_waf\_acl | GOV.UK default regional WAFv2 ACL |
 
