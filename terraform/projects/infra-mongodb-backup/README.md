@@ -20,6 +20,7 @@
 | aws\_environment | AWS Environment | `string` | n/a | yes |
 | aws\_region | AWS region | `string` | `"eu-west-1"` | no |
 | bucket\_name | n/a | `string` | `"govuk-mongodb-backup-s3"` | no |
+| enable\_mongodb\_backup | Enable MongoDB Daily Backups | `string` | `"0"` | no |
 | remote\_state\_bucket | S3 bucket we store our terraform state in | `string` | n/a | yes |
 | remote\_state\_infra\_monitoring\_key\_stack | Override stackname path to infra\_monitoring remote state | `string` | `""` | no |
 | remote\_state\_infra\_networking\_key\_stack | Override infra\_networking remote state path | `string` | `""` | no |

@@ -24,6 +24,12 @@ variable "stackname" {
   description = "Stackname"
 }
 
+variable "enable_mongodb_backup" {
+  type        = "string"
+  default     = "0"
+  description = "Enable MongoDB Daily Backups"
+}
+
 terraform {
   backend          "s3"             {}
   required_version = "= 0.11.14"
@@ -53,6 +59,7 @@ module "govuk-mongodb-backup-s3" {
 }
 
 module "govuk-mongodb-backup-s3-daily" {
+  count                        = "${var.enable_mongodb_backup}"
   source                       = "../../modules/aws/s3_bucket_lifecycle"
   aws_environment              = "${var.aws_environment}"
   bucket_name                  = "${var.bucket_name}-daily-${var.aws_environment}"
