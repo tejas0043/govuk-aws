@@ -75,6 +75,29 @@ resource "aws_security_group_rule" "mapit_ingress_mapit-carrenza-alb_http" {
   source_security_group_id = "${aws_security_group.mapit_carrenza_alb.id}"
 }
 
+resource "aws_security_group" "mapit_cache" {
+  name        = "${var.stackname}_mapit_cache_access"
+  vpc_id      = "${data.terraform_remote_state.infra_vpc.vpc_id}"
+  description = "Access to the mapit cache from mapit"
+
+  tags {
+    Name = "${var.stackname}_mapit_cache_access"
+  }
+}
+
+resource "aws_security_group_rule" "mapit_mapit_cache" {
+  type      = "ingress"
+  from_port = 11211
+  to_port   = 11211
+  protocol  = "tcp"
+
+  # Which security group is the rule assigned to
+  security_group_id = "${aws_security_group.mapit_cache.id}"
+
+  # Which security group can use this rule
+  source_security_group_id = "${aws_security_group.mapit.id}"
+}
+
 # Security resources for ALB set up for Carrenza access to AWS Mapit
 
 resource "aws_security_group" "mapit_carrenza_alb" {

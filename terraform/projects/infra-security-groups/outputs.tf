@@ -346,6 +346,10 @@ output "sg_mapit_elb_id" {
   value = "${aws_security_group.mapit_elb.id}"
 }
 
+output "sg_mapit_cache_id" {
+  value = "${aws_security_group.mapit_cache.id}"
+}
+
 output "sg_management_id" {
   value = "${aws_security_group.management.id}"
 }

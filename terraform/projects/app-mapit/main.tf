@@ -154,6 +154,23 @@ resource "aws_route53_record" "mapit_service_record" {
   }
 }
 
+resource "aws_elasticache_subnet_group" "cache" {
+  name       = "${var.stackname}-mapit-cache"
+  subnet_ids = ["${data.terraform_remote_state.infra_networking.private_subnet_ids}"]
+}
+
+resource "aws_elasticache_cluster" "memcached" {
+  cluster_id           = "${var.stackname}-mapit-cache"
+  engine               = "memcached"
+  engine_version       = "1.6.6"
+  port                 = 11211
+  parameter_group_name = "default.memcached1.6"
+  node_type            = "cache.r6g.large"                                                          # Memory optimized Graviton2 ($0.206/hour as of 2020)
+  num_cache_nodes      = 1
+  security_group_ids   = ["${data.terraform_remote_state.infra_security_groups.sg_mapit_cache_id}"]
+  subnet_group_name    = "${aws_elasticache_subnet_group.cache.name}"
+}
+
 module "mapit-1" {
   lc_create_ebs_volume          = "${var.lc_create_ebs_volume}"
   source                        = "../../modules/aws/node_group"
