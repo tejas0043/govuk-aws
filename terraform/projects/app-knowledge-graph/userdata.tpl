@@ -71,6 +71,7 @@ git clone git@github.com:alphagov/govuk-knowledge-graph.git
 
 # Set correct permissions for provisioning script
 cd govuk-knowledge-graph
+git checkout strip-html-from-withdrawn-notice-explanation
 chmod +x ./provision_knowledge_graph
 
 # Run provisioning script
