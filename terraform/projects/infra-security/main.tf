@@ -108,12 +108,18 @@ variable "ssh_public_key" {
 
 terraform {
   backend          "s3"             {}
-  required_version = "= 0.11.14"
+  required_version = "= 0.13.6"
+  
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.13"
+    }
+  }
 }
 
 provider "aws" {
   region  = "${var.aws_region}"
-  version = "2.46.0"
 }
 
 data "aws_caller_identity" "current" {}
