@@ -1,0 +1,2 @@
+bucket  = "govuk-terraform-steppingstone-production"
+prefix  = "govuk/infra-google-cloud-cdn"

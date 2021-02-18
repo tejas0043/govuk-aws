@@ -56,6 +56,12 @@ variable "govuk_mirror_google_reader_aws_secret_access_key" {
   description = "AWS secret access key used by google transfer service to access s3 govuk mirror bucket"
 }
 
+variable "enable_public" {
+  type        = "string"
+  description = "State whether bucket is accessible for reading by anyone"
+  default     = false
+}
+
 # Resources
 # --------------------------------------------------------------
 
@@ -167,4 +173,22 @@ resource "google_storage_transfer_job" "s3-bucket-daily-sync" {
   depends_on = [
     "google_storage_bucket_iam_member.s3-sync-bucket",
   ]
+}
+
+resource "google_storage_bucket_iam_binding" "binding" {
+  count  = "${var.enable_public ? 1 : 0 }"
+  bucket = "${google_storage_bucket.govuk-mirror.name}"
+  role   = "roles/storage.objectViewer"
+
+  members = [
+    "allUsers",
+  ]
+}
+
+# Outputs
+#--------------------------------------------------------------
+
+output "bucket_name" {
+  value       = "${google_storage_bucket.govuk-mirror.name}"
+  description = "name of GCS mirror bucket"
 }

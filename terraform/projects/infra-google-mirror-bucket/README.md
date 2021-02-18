@@ -25,6 +25,7 @@ No Modules.
 | Name |
 |------|
 | [google_storage_bucket](https://registry.terraform.io/providers/hashicorp/google/2.4.1/docs/resources/storage_bucket) |
+| [google_storage_bucket_iam_binding](https://registry.terraform.io/providers/hashicorp/google/2.4.1/docs/resources/storage_bucket_iam_binding) |
 | [google_storage_bucket_iam_member](https://registry.terraform.io/providers/hashicorp/google/2.4.1/docs/resources/storage_bucket_iam_member) |
 | [google_storage_transfer_job](https://registry.terraform.io/providers/hashicorp/google/2.4.1/docs/resources/storage_transfer_job) |
 | [google_storage_transfer_project_service_account](https://registry.terraform.io/providers/hashicorp/google/2.4.1/docs/data-sources/storage_transfer_project_service_account) |
@@ -34,6 +35,7 @@ No Modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| enable\_public | State whether bucket is accessible for reading by anyone | `string` | `false` | no |
 | google\_environment | Google environment, which is govuk environment. e.g: staging | `string` | `""` | no |
 | google\_project\_id | Google project ID | `string` | `"eu-west2"` | no |
 | google\_region | Google region the provider | `string` | `"eu-west2"` | no |
@@ -46,4 +48,6 @@ No Modules.
 
 ## Outputs
 
-No output.
+| Name | Description |
+|------|-------------|
+| bucket\_name | name of GCS mirror bucket |
